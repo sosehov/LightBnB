@@ -64,21 +64,21 @@ VALUES
 (
     1,  -- guest_id
     1,  -- property_id (this would refer to the beachfront villa)
-    4,  -- reservation_id
+    1,  -- reservation_id
     5,  -- rating (out of 5 stars)
     'Absolutely amazing stay! The villa was right by the beach, and the view was breathtaking. Highly recommend!'
 ),
 (
     2,  -- guest_id
     2,  -- property_id (this would refer to the luxury mountain retreat)
-    5,  -- reservation_id
+    2,  -- reservation_id
     4,  -- rating (out of 5 stars)
     'A peaceful getaway. The retreat was beautiful, but we expected a little more luxury for the price. Still, a very relaxing stay.'
 ),
 (
     3,  -- guest_id
     3,  -- property_id (this would refer to the urban loft)
-    6,  -- reservation_id
+    3,  -- reservation_id
     4,  -- rating (out of 5 stars)
     'Great location in downtown New York! The loft was modern and well-equipped, though a bit smaller than we anticipated. Overall, a great experience.'
 );
