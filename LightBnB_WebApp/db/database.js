@@ -76,7 +76,25 @@ const addUser = function(user) {
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  const query = `SELECT reservations.*
+    FROM property_reviews
+    JOIN users ON users.id = guest_id
+    JOIN reservations ON reservation.user_id = users.id
+    WHERE guest_id = $1
+    GROUP BY reservations.id
+    ORDER BY reservations.start_date
+    LIMIT $2;
+    `;
+  const values = [guest_id, limit];
+  return pool.query(query, values)
+    .then((result) => {
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log("Failed to get all reservations", err.message);
+      return null;
+    });
+
 };
 
 /// Properties
@@ -90,7 +108,6 @@ const getAllReservations = function(guest_id, limit = 10) {
 const getAllProperties = (options, limit = 10) => {
   return pool.query(`SELECT * FROM properties LIMIT $1`, [limit])
     .then((result) => {
-      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
