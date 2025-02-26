@@ -129,12 +129,12 @@ const getAllProperties = (options, limit = 10) => {
   }
 
   if (options.minimum_price_per_night) {
-    queryParams.push(options.minimum_price_per_night * 1000); // convert to cents
+    queryParams.push(options.minimum_price_per_night * 100); // convert to cents
     whereClauses.push(`cost_per_night >= $${queryParams.length}`);
   }
 
   if (options.maximum_price_per_night) {
-    queryParams.push(options.maximum_price_per_night * 1000); //convert to cents
+    queryParams.push(options.maximum_price_per_night * 100); //convert to cents
     whereClauses.push(`cost_per_night <= $${queryParams.length}`);
   }
 
@@ -148,6 +148,9 @@ const getAllProperties = (options, limit = 10) => {
     queryString += ` WHERE ` + whereClauses.join(' AND ');
   }
 
+  // Add GROUP BY clause (to allow aggregation for average_rating)
+  queryString += ` GROUP BY properties.id`;
+
   // if there are any HAVING clauses combine them with AND
   if (havingClauses.length > 0) {
     queryString += ` HAVING ` + havingClauses.join(' AND ');
@@ -155,7 +158,6 @@ const getAllProperties = (options, limit = 10) => {
 
   queryParams.push(limit);
   queryString += `
-  GROUP BY properties.id
   ORDER BY cost_per_night
   LIMIT $${queryParams.length};
   `;
