@@ -185,7 +185,7 @@ const addProperty = function(property) {
   owner_id, title, description, thumbnail_photo_url, cover_photo_url, cost_per_night, parking_spaces, number_of_bathrooms, number_of_bedrooms, country, street, city, province, post_code
   )
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-  RETURNING *`;
+  RETURNING *;`;
   const queryParams = [
     property.owner_id,
     property.title,
@@ -204,13 +204,13 @@ const addProperty = function(property) {
   ];
 
   return pool.query(queryString, queryParams)
-  .then((result) => {
-    return result.rows[0];
-  })
-  .catch((err) => {
-    console.log("Error adding the new property", err.message);
-    return Promise.reject(err);
-  });
+    .then((result) => {
+      return result.rows[0];
+    })
+    .catch((err) => {
+      console.log("Error adding the new property", err.message);
+      return Promise.reject(err);
+    });
 };
 
 module.exports = {
