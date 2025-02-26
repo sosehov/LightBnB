@@ -116,6 +116,7 @@ const getAllProperties = (options, limit = 10) => {
   `;
 
   let whereClauses = [];
+  let havingClauses = [];
 
   if (options.city) {
     queryParams.push(`%${options.city}%`);
@@ -139,12 +140,17 @@ const getAllProperties = (options, limit = 10) => {
 
   if (options.minimum_rating) {
     queryParams.push(options.minimum_rating);
-    whereClauses.push(`average_rating >= $${queryParams.length}`);
+    havingClauses.push(`average_rating >= $${queryParams.length}`);
   }
 
   // if there are any WHERE clauses combine them with AND
   if (whereClauses.length > 0) {
-    queryString += 'WHERE' + whereClauses.join('AND');
+    queryString += ` WHERE ` + whereClauses.join(' AND ');
+  }
+
+  // if there are any HAVING clauses combine them with AND
+  if (havingClauses.length > 0) {
+    queryString += ` HAVING ` + havingClauses.join(' AND ');
   }
 
   queryParams.push(limit);
