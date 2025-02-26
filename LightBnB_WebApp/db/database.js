@@ -75,13 +75,14 @@ const addUser = function(user) {
  * @param {string} guest_id The id of the user.
  * @return {Promise<[{}]>} A promise to the reservations.
  */
+
 const getAllReservations = function(guest_id, limit = 10) {
-  const query = `SELECT reservations.*
-    FROM property_reviews
-    JOIN users ON users.id = guest_id
-    JOIN reservations ON reservation.user_id = users.id
-    WHERE guest_id = $1
-    GROUP BY reservations.id
+  const query = `SELECT reservations.*, properties.id, properties.title, properties.thumbnail_photo_url, properties.cost_per_night,properties.parking_spaces, properties.number_of_bathrooms, properties.number_of_bedrooms, AVG(property_reviews.rating) as average_rating
+    FROM properties
+    JOIN reservations ON properties.id = reservations.property_id
+    JOIN property_reviews ON reservations.id = reservation_id
+    WHERE reservations.guest_id = $1 AND reservations.end_date < now()::date
+    GROUP BY reservations.id, properties.id
     ORDER BY reservations.start_date
     LIMIT $2;
     `;
@@ -96,6 +97,7 @@ const getAllReservations = function(guest_id, limit = 10) {
     });
 
 };
+
 
 /// Properties
 
